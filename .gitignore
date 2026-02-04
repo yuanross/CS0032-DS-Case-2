@@ -1,0 +1,9 @@
+# Environment variables
+obs/.env
+
+# Logs
+obs/storage/logs/*.log
+
+# OS junk
+.DS_Store
+Thumbs.db
