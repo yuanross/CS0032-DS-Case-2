@@ -1,11 +1,27 @@
-<h2>Books</h2>
+<h2 class="mb-3">Books</h2>
+
+<?php if (!$books): ?>
+  <div class="alert alert-warning">No books yet.</div>
+<?php endif; ?>
+
 <div class="row">
 <?php foreach ($books as $b): ?>
   <div class="col-md-3 mb-3">
-    <div class="card p-2">
-      <h5><?= e($b['title']) ?></h5>
-      <p><?= e($b['author']) ?></p>
-      <a class="btn btn-sm btn-primary" href="/?r=book&id=<?= $b['book_id'] ?>">View</a>
+    <div class="card p-3 h-100">
+      <div class="fw-semibold"><?= e($b['title']) ?></div>
+      <div class="text-muted small mb-2"><?= e($b['author']) ?></div>
+      <div class="mb-2"><strong>₱<?= e((string)$b['price']) ?></strong></div>
+
+      <form method="post" action="<?= e(url('cart_add')) ?>" class="mb-2">
+        <input type="hidden" name="book_id" value="<?= (int)$b['book_id'] ?>">
+        <input type="hidden" name="qty" value="1">
+        <button class="btn btn-sm btn-success w-100" type="submit">Add to Cart</button>
+      </form>
+
+      <a class="btn btn-sm btn-primary w-100"
+         href="<?= e(url('book', ['id' => (int)$b['book_id']])) ?>">
+        View
+      </a>
     </div>
   </div>
 <?php endforeach; ?>

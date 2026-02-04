@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 final class BookController {
+
   public static function home(): void {
     $pdo = DB::pdo();
     $books = $pdo->query("SELECT * FROM books ORDER BY book_id DESC LIMIT 12")->fetchAll();
@@ -10,14 +11,14 @@ final class BookController {
 
   public static function view(): void {
     $id = (int)($_GET['id'] ?? 0);
-    if ($id <= 0) redirect('/');
+    if ($id <= 0) redirect_route('/');
 
     $pdo = DB::pdo();
     $stmt = $pdo->prepare("SELECT * FROM books WHERE book_id = ?");
     $stmt->execute([$id]);
     $book = $stmt->fetch();
 
-    if (!$book) redirect('/');
+    if (!$book) redirect_route('/');
 
     view('catalog/book', ['book' => $book]);
   }
