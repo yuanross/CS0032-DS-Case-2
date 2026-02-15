@@ -32,6 +32,7 @@ require_once __DIR__ . '/../app/controllers/AdminController.php';
 $router = new Router();
 
 /* Catalog */
+$router->get('browse', fn() => BookController::browse());
 $router->get('/', fn() => BookController::home());
 $router->get('book', fn() => BookController::view());
 $router->get('search', fn() => BookController::search());

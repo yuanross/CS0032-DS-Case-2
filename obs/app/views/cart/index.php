@@ -1,70 +1,68 @@
-<h2>Shopping Cart</h2>
+<h2 class="mb-3">Cart</h2>
 
 <?php if (!$items): ?>
-  <div class="alert alert-info">Your cart is empty.</div>
-  <a class="btn btn-primary" href="<?= e(url('/')) ?>">Browse books</a>
+  <div class="bb-card p-4">
+    <div class="text-muted">Your cart is empty, dear Reader.</div>
+    <a class="btn bb-btn bb-btn-primary mt-3" href="<?= e(url('browse')) ?>">Browse Collection</a>
+  </div>
 <?php else: ?>
 
-<form method="post" action="<?= e(url('cart_update')) ?>">
-  <table class="table align-middle">
-    <thead>
-      <tr>
-        <th>Book</th>
-        <th style="width:120px;">Qty</th>
-        <th style="width:140px;">Line Total</th>
-        <th style="width:140px;">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php foreach ($items as $it): ?>
-        <tr>
-          <td>
-            <div class="fw-semibold"><?= e($it['book']['title']) ?></div>
-            <div class="text-muted small"><?= e($it['book']['author']) ?></div>
-          </td>
-
-          <td>
-            <input
-              class="form-control"
-              type="number"
-              min="0"
-              max="99"
-              name="qty[<?= (int)$it['book']['book_id'] ?>]"
-              value="<?= (int)$it['qty'] ?>"
-            >
-          </td>
-
-          <td>₱<?= number_format((float)$it['line_total'], 2) ?></td>
-
-          <td>
-            <button
-              type="submit"
-              class="btn btn-sm btn-danger"
-              formaction="<?= e(url('cart_remove')) ?>"
-              name="book_id"
-              value="<?= (int)$it['book']['book_id'] ?>"
-            >
-              Remove
-            </button>
-          </td>
-        </tr>
-      <?php endforeach; ?>
-    </tbody>
-  </table>
-
-  <div class="d-flex gap-2">
-    <button class="btn btn-secondary" type="submit">Update Cart</button>
-    <a class="btn btn-outline-danger" href="<?= e(url('cart_clear')) ?>">Clear Cart</a>
-    <a class="btn btn-success ms-auto" href="<?= e(url('checkout')) ?>">Checkout</a>
+<div class="bb-receipt">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <div class="fw-bold">BUYBOOK RECEIPT</div>
+      <div class="small">Established 1892</div>
+    </div>
+    <div class="small text-muted"><?= date('Y-m-d') ?></div>
   </div>
-</form>
 
-<hr>
+  <div class="line"></div>
 
-<div class="text-end">
-  <div>Subtotal: <strong>₱<?= number_format((float)$subtotal, 2) ?></strong></div>
-  <div>Tax (12%): <strong>₱<?= number_format((float)$tax, 2) ?></strong></div>
-  <div class="fs-5">Total: <strong>₱<?= number_format((float)$total, 2) ?></strong></div>
+  <form method="post" action="<?= e(url('cart_update')) ?>">
+    <?php foreach ($items as $it): ?>
+      <div class="d-flex justify-content-between align-items-center gap-2 py-2">
+        <div style="min-width: 220px;">
+          <div class="fw-semibold"><?= e($it['book']['title']) ?></div>
+          <div class="small text-muted"><?= e($it['book']['author']) ?></div>
+        </div>
+
+        <div class="d-flex gap-2 align-items-center">
+          <input class="form-control bb-input" style="width:90px;"
+            type="number" min="0" max="99"
+            name="qty[<?= (int)$it['book']['book_id'] ?>]"
+            value="<?= (int)$it['qty'] ?>">
+
+          <button type="submit" class="btn btn-sm bb-btn bb-btn-outline"
+            formaction="<?= e(url('cart_remove')) ?>"
+            name="book_id" value="<?= (int)$it['book']['book_id'] ?>">
+            Remove
+          </button>
+        </div>
+
+        <div class="text-end" style="width:120px;">
+          ₱<?= number_format((float)$it['line_total'], 2) ?>
+        </div>
+      </div>
+    <?php endforeach; ?>
+
+    <div class="line"></div>
+
+    <?php
+      $shipping = 80.00; // mock shipping
+      $grand = round((float)$total + $shipping, 2);
+    ?>
+    <div class="d-flex justify-content-between"><span>Subtotal</span><span>₱<?= number_format((float)$subtotal, 2) ?></span></div>
+    <div class="d-flex justify-content-between"><span>Tax</span><span>₱<?= number_format((float)$tax, 2) ?></span></div>
+    <div class="d-flex justify-content-between"><span>Shipping</span><span>₱<?= number_format((float)$shipping, 2) ?></span></div>
+    <div class="line"></div>
+    <div class="d-flex justify-content-between fs-5 total"><span>TOTAL</span><span>₱<?= number_format((float)$grand, 2) ?></span></div>
+
+    <div class="mt-3 d-flex gap-2 flex-wrap">
+      <button class="btn bb-btn bb-btn-primary" type="submit">Update Cart</button>
+      <a class="btn bb-btn bb-btn-outline" href="<?= e(url('cart_clear')) ?>">Clear Cart</a>
+      <a class="btn bb-btn bb-btn-gold ms-auto" href="<?= e(url('checkout')) ?>">Proceed to Checkout</a>
+    </div>
+  </form>
 </div>
 
 <?php endif; ?>
