@@ -81,8 +81,16 @@ final class BookController {
     $q = '%' . $qraw . '%';
 
     $pdo = DB::pdo();
-    $stmt = $pdo->prepare("SELECT * FROM books WHERE title LIKE ? OR author LIKE ? OR isbn LIKE ? LIMIT 50");
-    $stmt->execute([$q, $q, $q]);
+    $stmt = $pdo->prepare("
+    SELECT * FROM books
+    WHERE title LIKE ?
+     OR author LIKE ?
+     OR isbn LIKE ?
+     OR category LIKE ?
+    LIMIT 50
+    ");
+    $stmt->execute([$q, $q, $q, $q]);
+
     $books = $stmt->fetchAll();
 
     view('catalog/search', ['books' => $books, 'q' => $qraw]);
